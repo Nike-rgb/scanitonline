@@ -2,26 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.my_button {
+  background-color: #ac50c3;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.my_button:hover {
+  background-color: #ac50c3;
+  opacity: 0.8;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.footer_btn {
+  background-color: #fff;
+}
+
+.footer_btn:hover {
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+.cropper {
+  width: 100%;
+  height: 100%;
+  height: 74vh;
+}
+
+.cropper .cropper-wrap-box,
+.cropper .cropper-drag-box,
+.cropper .cropper-bg {
+  box-shadow: 0 3px 3px 1px rgba(0, 0, 0, 0.1);
+}
+
+.cropper .cropper-modal {
+  opacity: 0.1 !important;
+}
+
+.cropper .cropper-bg {
+  /*can change the backgroundimage */
+  background-image: url("/tiles.webp");
+  background-size: cover;
 }
