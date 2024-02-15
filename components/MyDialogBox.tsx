@@ -12,6 +12,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     borderRadius: 15,
     padding: 10,
     margin: 18,
+    maxWidth: 400,
   },
   "& .MuiBackdrop-root": {
     backgroundColor: "rgba(0, 0, 0, 0.2)",

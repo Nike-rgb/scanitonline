@@ -72,7 +72,7 @@ export default function ImageTile(props: ImageProps) {
           <motion.div drag draggable={true} dragSnapToOrigin={true}>
             <Paper
               ref={drag}
-              className="rounded-lg w-[80px] h-[120px] relative"
+              className="rounded-lg w-[80px] h-[120px] relative md:w-[90px] md:h-[140px]"
               elevation={3}>
               <Image
                 style={{

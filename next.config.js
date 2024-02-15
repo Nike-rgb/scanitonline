@@ -1,6 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
   reactStrictMode: true,
-}
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false, path: false, crypto: false };
+    return config;
+  },
+};
 
-module.exports = nextConfig
+const withPWA = require("next-pwa")({
+  dest: "public",
+  register: true,
+});
+
+/*module.exports = withPWA({
+  ...nextConfig,
+});*/
+
+module.exports = nextConfig;

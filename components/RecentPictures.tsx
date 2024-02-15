@@ -17,7 +17,9 @@ export default function RecentPictures() {
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading>Recent Pictures</Heading>
+        <Heading>
+          <span className="md:text-xl">Recent Pictures</span>
+        </Heading>
         <Regular color={Colors.primary}>
           <Button
             sx={{
@@ -26,14 +28,16 @@ export default function RecentPictures() {
               fontSize: 14,
               fontWeight: 400,
             }}>
-            <Link href="/app/images">View All</Link>
+            <Link href="/app/images">
+              <span className="md:text-md">View All</span>
+            </Link>
           </Button>
         </Regular>
       </div>
       <motion.div
         initial={{ y: -10, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3 }}>
+        transition={{ duration: 0.2 }}>
         <div className="grid grid-cols-3 gap-4 mt-6 items-center justify-items-center ">
           {imgs.map((item, index) => (
             <ImageTile

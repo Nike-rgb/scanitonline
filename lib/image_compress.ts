@@ -1,7 +1,7 @@
 import imageCompression from "browser-image-compression";
 
 const options = {
-  maxSizeMB: 0.2,
+  maxSizeMB: 0.5,
   maxWidthOrHeight: 1920,
   useWebWorker: true,
 };

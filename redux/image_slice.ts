@@ -5,17 +5,22 @@ import { imageType } from "./types";
 export interface ImagesState {
   editorImage: imageType;
   images: imageType[];
+  processing: boolean;
 }
 
 const initialState: ImagesState = {
   editorImage: { timestamp: 0, image: "" },
   images: [],
+  processing: false,
 };
 
 export const imageSlice = createSlice({
   name: "images",
   initialState,
   reducers: {
+    setProcessing: (state, action: PayloadAction<boolean>) => {
+      state.processing = action.payload;
+    },
     clearAllImages: (state) => {
       state.images = [];
     },
@@ -55,6 +60,7 @@ export const {
   reorder,
   loadLocalImages,
   clearAllImages,
+  setProcessing,
 } = imageSlice.actions;
 
 export default imageSlice.reducer;

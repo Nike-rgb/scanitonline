@@ -112,4 +112,4 @@ export async function clearLocalImages() {
   });
 }
 
-export const debouncedSaveImagesLocally = debounce(saveImagesLocally, 1000);
+export const debouncedSaveImagesLocally = debounce(saveImagesLocally, 300);

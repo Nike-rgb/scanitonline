@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+#github-button {
+  background-color: #484545 !important;
+}
+
+.loading_fab {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .my_button {
   background-color: #ac50c3;
 }

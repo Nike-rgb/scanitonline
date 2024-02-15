@@ -16,13 +16,21 @@ import MyButton from "@/components/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DashBoard from "@/components/dashboard";
 import { loadLocalImages } from "@/redux/image_slice";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import Fab from "@mui/material/Fab";
 
 export default function App() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const processing = useSelector((state: any) => state.images.processing);
   const imagesLength = useSelector(
     (state: RootState) => state.images.images.length
   );
+
+  const goToHomePage = () => {
+    router.push("/");
+  };
 
   const [loadImageDialogShown, setLoadImageDialogShown] = React.useState(false);
 
@@ -47,7 +55,6 @@ export default function App() {
       try {
         const images = (await getLocalImages()) as imageType[];
         if (images.length > 0) {
-          console.log("images", images);
           setLocalImages(images);
           setLoadImageDialogShown(true);
         }
@@ -97,10 +104,13 @@ export default function App() {
               <Button
                 sx={{ color: Colors.secondary, textTransform: "none" }}
                 startIcon={
-                  <Image src="/doc.png" width={14} height={20} alt="docs" />
+                  <InfoOutlinedIcon
+                    sx={{ color: Colors.secondary, fontSize: 16 }}
+                  />
                 }
-                variant="text">
-                <Regular>Docs</Regular>
+                variant="text"
+                onClick={goToHomePage}>
+                <Regular>About</Regular>
               </Button>
             </div>
           </nav>
@@ -139,6 +149,16 @@ export default function App() {
         </main>
       ) : (
         <DashBoard />
+      )}
+      {processing && (
+        <Fab
+          className="my_button loading_fab"
+          sx={{ position: "absolute", top: 14, right: 14 }}
+          size="medium"
+          color="secondary"
+          aria-label="add">
+          <HourglassEmptyIcon />
+        </Fab>
       )}
     </>
   );

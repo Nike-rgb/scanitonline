@@ -16,6 +16,8 @@ import ImageIcon from "@mui/icons-material/Image";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { clearLocalImages } from "@/lib/local_save";
+import createZipAndDownload from "@/lib/zip_image_arrary";
+import { imageType } from "@/redux/types";
 
 export default function DashBoard() {
   const router = useRouter();
@@ -34,6 +36,11 @@ export default function DashBoard() {
   const exportPDF = async () => {
     await createPDF(images, fileName, filterType);
     clearLocalImages();
+  };
+
+  const exportImages = async () => {
+    const base64Array = images.map((img: imageType) => img.image);
+    await createZipAndDownload(base64Array, fileName);
   };
 
   const toggleGrayscale = () => {
@@ -72,7 +79,9 @@ export default function DashBoard() {
             <div className="flex gap-2 items-center">
               <Image src="/logo.png" width={45} height={45} alt="logo" />
               <h1>
-                <Heading color={Colors.primary}>ScanItOnline</Heading>
+                <Heading color={Colors.primary}>
+                  <span className="md:text-2xl">ScanItOnline</span>
+                </Heading>
               </h1>
             </div>
             <IconButton>
@@ -81,65 +90,75 @@ export default function DashBoard() {
           </div>
         </nav>
 
-        <section className="mt-2 mb-2">
+        <section className="mt-2 mb-2 md:mt-10">
           <RecentPictures />
         </section>
 
-        <section className="my-2">
-          <Heading>Add More</Heading>
-          <div className="flex gap-4 mt-4">
-            <ImageInputButtonGroup />
-          </div>
-        </section>
+        <div className="md:flex md:flex-row md:justify-between md:items-center md:mt-10">
+          <section className="my-2">
+            <Heading>
+              <span className="md:text-xl">Add More</span>
+            </Heading>
+            <div className="flex gap-4 mt-4 md:mt-6">
+              <ImageInputButtonGroup />
+            </div>
+          </section>
 
-        <section className="my-4">
-          <Heading>Settings</Heading>
-          <div className="mt-4 grid grid-cols-2 gap-1">
-            <div className="flex gap-1 items-center">
-              <Checkbox
-                checked={filterType === "grayscale"}
-                onClick={toggleGrayscale}
-              />
+          <section className="my-4 md:min-w-[500px]">
+            <Heading>
+              <span className="md:text-xl">Settings</span>
+            </Heading>
+            <div className="mt-4 grid grid-cols-2 gap-1">
+              <div className="flex gap-1 items-center">
+                <Checkbox
+                  checked={filterType === "grayscale"}
+                  onClick={toggleGrayscale}
+                />
 
-              <Regular>Grayscale</Regular>
+                <Regular>Grayscale</Regular>
+              </div>
+              <div className="flex gap-1 items-center">
+                <Checkbox
+                  checked={filterType === "highContrast"}
+                  onClick={toggleHighContrast}
+                />
+                <Regular>Contrast</Regular>
+                <Tooltip
+                  arrow
+                  open={openContrastTip}
+                  title="Enhance the readibility of texts in your documents. Make sure the photos are well-lit and do not contain shadows">
+                  <IconButton onClick={toggleContrastTip}>
+                    <HelpIcon
+                      style={{ color: Colors.secondary, fontSize: 22 }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </div>
             </div>
             <div className="flex gap-1 items-center">
-              <Checkbox
-                checked={filterType === "highContrast"}
-                onClick={toggleHighContrast}
-              />
-              <Regular>Contrast</Regular>
+              <Checkbox checked={true} sx={{ color: Colors.primary }} />
+              <Regular>
+                <span className="text-center">Attribute Us?</span>
+              </Regular>
               <Tooltip
                 arrow
-                open={openContrastTip}
-                title="Enhance the readibility of texts in your documents. Make sure the photos are well-lit and do not contain shadows">
-                <IconButton onClick={toggleContrastTip}>
-                  <HelpIcon style={{ color: Colors.secondary, fontSize: 22 }} />
+                open={openAttributionTip}
+                title="We would love it if you could attribute us when you share your documents.">
+                <IconButton onClick={toggleAttributionTip}>
+                  <HelpIcon
+                    sx={{ color: Colors.secondary, fontSize: 22 }}
+                    fontSize="small"
+                  />
                 </IconButton>
               </Tooltip>
             </div>
-          </div>
-          <div className="flex gap-1 items-center">
-            <Checkbox checked={true} sx={{ color: Colors.primary }} />
-            <Regular>
-              <span className="text-center">Attribute Us?</span>
-            </Regular>
-            <Tooltip
-              arrow
-              open={openAttributionTip}
-              title="We would love it if you could attribute us when you share your documents.">
-              <IconButton onClick={toggleAttributionTip}>
-                <HelpIcon
-                  sx={{ color: Colors.secondary, fontSize: 22 }}
-                  fontSize="small"
-                />
-              </IconButton>
-            </Tooltip>
-          </div>
-        </section>
+          </section>
+        </div>
 
-        <section className="my-4">
-          <Heading>File Name</Heading>
+        <section className="my-4 md:mt-10">
+          <Heading>
+            <span className="md:text-xl">File Name</span>
+          </Heading>
           <div className="flex gap-1 items-end mt-4">
             <MyTextField
               name="filename"
@@ -153,7 +172,7 @@ export default function DashBoard() {
           </div>
         </section>
 
-        <section className="mt-4 grid grid-cols-3 item-center justify-items-center max-w-xl">
+        <section className="mt-4 grid grid-cols-3 item-center justify-items-center max-w-[500px]">
           <FooterButton
             onClick={() => {
               router.push("/app/images");
@@ -171,7 +190,7 @@ export default function DashBoard() {
             Export PDF
           </FooterButton>
           <FooterButton
-            onClick={() => {}}
+            onClick={exportImages}
             Icon={<CollectionsIcon style={{ color: Colors.secondary }} />}>
             Export Images
           </FooterButton>

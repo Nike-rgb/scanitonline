@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 
 export default function ImageMenu() {
   const router = useRouter();
@@ -29,13 +30,9 @@ export default function ImageMenu() {
                 <Heading color={Colors.primary}>ScanItOnline</Heading>
               </h1>
             </div>
+
             <IconButton>
-              <Image
-                src="/icons/download.svg"
-                alt="install app"
-                width={24}
-                height={18}
-              />
+              <SaveAltIcon sx={{ color: Colors.secondary }} />
             </IconButton>
           </div>
         </nav>
@@ -59,7 +56,7 @@ export default function ImageMenu() {
           <motion.div
             initial={{ y: -10, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.3 }}>
+            transition={{ duration: 0.2 }}>
             <div className="grid grid-cols-3 gap-4 md:grid-cols-5">
               {images.map((item, index) => (
                 <ImageTile

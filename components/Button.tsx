@@ -5,6 +5,7 @@ interface ButtonProps {
   children: React.ReactNode;
   icon: React.ReactNode;
   onClick: Function;
+  disabled?: boolean;
   variant?: "text" | "contained" | "outlined";
 }
 
@@ -16,6 +17,7 @@ const MyButton = (props: ButtonProps) => {
         borderRadius: "15px",
         textTransform: "none",
       }}
+      disabled={props.disabled}
       endIcon={props.icon}
       variant={props.variant ?? "contained"}
       onClick={() => props.onClick()}>

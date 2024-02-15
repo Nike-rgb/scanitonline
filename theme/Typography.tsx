@@ -4,14 +4,16 @@ const Heading = ({
   children,
   color = Colors.secondary,
   size,
+  weight,
 }: {
   children: React.ReactNode;
   color?: string;
   size?: number;
+  weight?: number;
 }) => (
   <span
     className="text-lg font-semibold"
-    style={{ fontSize: size, color: color }}>
+    style={{ fontSize: size, color: color, fontWeight: weight }}>
     {children}
   </span>
 );

@@ -1,0 +1,13 @@
+@media only screen and (max-width: 600px) {
+  .hero_text {
+    font-size: 20px !important;
+  }
+
+  .bigger {
+    font-size: 30px !important;
+  }
+
+  .regular {
+    font-size: 14px !important;
+  }
+}

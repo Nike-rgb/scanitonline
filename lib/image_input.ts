@@ -5,7 +5,6 @@ export function takeImgInput(source?: "camera" | "files"): Promise<string> {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
-    input.multiple = true;
     if (source == "camera") {
       input.capture = "environment";
     }
@@ -14,8 +13,8 @@ export function takeImgInput(source?: "camera" | "files"): Promise<string> {
       async function (this: HTMLInputElement, ev: Event) {
         if (this.files && this.files.length === 1) {
           const compressed = await ImageCompress(this.files[0]);
-          const blob = URL.createObjectURL(compressed);
-          resolve(blob);
+          const base64 = await blobToBase64(compressed);
+          resolve(base64);
         } else {
           reject("No image selected.");
         }
@@ -23,5 +22,22 @@ export function takeImgInput(source?: "camera" | "files"): Promise<string> {
     );
     input.click();
     input.remove();
+  });
+}
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+      const base64String = reader.result?.toString().split(",")[1];
+      if (base64String) {
+        resolve("data:image/png;base64," + base64String);
+      } else {
+        reject(new Error("Failed to convert Blob to Base64"));
+      }
+    };
+
+    reader.readAsDataURL(blob);
   });
 }
