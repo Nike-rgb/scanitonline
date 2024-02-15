@@ -63,7 +63,6 @@ const Cropper = (props: { fromMenu?: boolean }) => {
   return (
     <>
       <main className="p-6">
-        n
         <nav>
           <div className="flex justify-between items-center gap-4">
             <div className="flex gap-2 items-center">
