@@ -60,7 +60,6 @@ export default function ImageMenu() {
             <div className="grid grid-cols-3 gap-4 md:grid-cols-5">
               {images.map((item, index) => (
                 <ImageTile
-                  fromMenu={true}
                   key={index}
                   position={index}
                   img={item}

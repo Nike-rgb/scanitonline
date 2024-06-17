@@ -11,27 +11,50 @@ import { useRouter } from "next/router";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import ImageInputButtonGroup from "@/components/ImageInput";
 import createPDF from "@/lib/pdf_from_images";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ImageIcon from "@mui/icons-material/Image";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { clearLocalImages } from "@/lib/local_save";
 import createZipAndDownload from "@/lib/zip_image_arrary";
 import { imageType } from "@/redux/types";
+import { RootState } from "@/redux/store";
+import { setDeferredPrompt, setPWAInstalled } from "@/redux/pwa_states";
 
 export default function DashBoard() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const images = useSelector((state: any) => state.images.images);
   const [fileName, setFileName] = React.useState("Made with ScanItOnline");
   const [filterType, setFilterType] = React.useState("none");
   const [openContrastTip, setOpenContrastTip] = React.useState(false);
   const [openAttributionTip, setOpenAttributionTip] = React.useState(false);
+  const installable = useSelector((state: RootState) => state.pwa.installable);
+  const pwaInstalled = useSelector(
+    (state: RootState) => state.pwa.pwaInstalled
+  );
+  const deferredPrompt = useSelector(
+    (state: RootState) => state.pwa.defferedPrompt
+  );
 
   useEffect(() => {
     if (images.length === 0) {
       router.replace("/app");
     }
   }, [images, router]);
+
+  const installPwa = async () => {
+    console.log("check");
+    if (deferredPrompt) {
+      console.log("installing pwa");
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === "accepted") {
+        dispatch(setPWAInstalled(true));
+      }
+      dispatch(setDeferredPrompt(null));
+    }
+  };
 
   const exportPDF = async () => {
     await createPDF(images, fileName, filterType);
@@ -77,16 +100,25 @@ export default function DashBoard() {
         <nav>
           <div className="flex justify-between items-center gap-4">
             <div className="flex gap-2 items-center">
-              <Image src="/logo.png" width={45} height={45} alt="logo" />
+              <Image
+                className="cursor-pointer"
+                src="/logo.png"
+                width={45}
+                height={45}
+                alt="logo"
+              />
+
               <h1>
                 <Heading color={Colors.primary}>
                   <span className="md:text-2xl">ScanItOnline</span>
                 </Heading>
               </h1>
             </div>
-            <IconButton>
-              <SaveAltIcon sx={{ color: Colors.secondary }} />
-            </IconButton>
+            {installable && !pwaInstalled && (
+              <IconButton onClick={installPwa}>
+                <SaveAltIcon sx={{ color: Colors.secondary }} />
+              </IconButton>
+            )}
           </div>
         </nav>
 

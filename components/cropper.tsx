@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MyButton from "./Button";
 
-const Cropper = (props: { fromMenu?: boolean }) => {
+const Cropper = () => {
   const dispatch = useDispatch();
   const img = useSelector((state: RootState) => state.images.editorImage);
   const router = useRouter();
@@ -38,7 +38,7 @@ const Cropper = (props: { fromMenu?: boolean }) => {
       minCropBoxWidth: 50,
       minCropBoxHeight: 50,
     });
-    scan.loadImg(img.image);
+    if (img.image) scan.loadImg(img.image);
     setScanner(scan);
     return () => {
       scan.destroy();
@@ -55,8 +55,6 @@ const Cropper = (props: { fromMenu?: boolean }) => {
 
   const finishCrop = (onMenu: boolean) => {
     dispatch(addImage(img));
-    const fromMenu = router.query.fromMenu;
-    console.log(fromMenu === "true");
     router.back();
   };
 

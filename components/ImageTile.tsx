@@ -14,7 +14,6 @@ interface ImageProps {
   img: imageType;
   alt: string;
   position: number;
-  fromMenu?: boolean; //to check if the image is from the menu or the dashboard
 }
 
 //required type for drag and drop library
@@ -48,7 +47,7 @@ export default function ImageTile(props: ImageProps) {
 
   const edit = () => {
     dispatch(setEditorImage(props.img));
-    router.push(`/app/editor?fromMenu=${props.fromMenu}`);
+    router.push(`/app/editor`);
   };
 
   const remove = () => {

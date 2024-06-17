@@ -7,7 +7,7 @@ import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import ImageInputButtonGroup from "@/components/ImageInput";
 import { clearLocalImages, getLocalImages } from "@/lib/local_save";
 import { imageType } from "@/redux/types";
@@ -16,9 +16,15 @@ import MyButton from "@/components/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DashBoard from "@/components/dashboard";
 import { loadLocalImages } from "@/redux/image_slice";
+import {
+  setDeferredPrompt,
+  setInstallable,
+  setPWAInstalled,
+} from "@/redux/pwa_states";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import Fab from "@mui/material/Fab";
+import Editor from "./editor";
 
 export default function App() {
   const router = useRouter();
@@ -26,6 +32,13 @@ export default function App() {
   const processing = useSelector((state: any) => state.images.processing);
   const imagesLength = useSelector(
     (state: RootState) => state.images.images.length
+  );
+  const installable = useSelector((state: RootState) => state.pwa.installable);
+  const pwaInstalled = useSelector(
+    (state: RootState) => state.pwa.pwaInstalled
+  );
+  const deferredPrompt = useSelector(
+    (state: RootState) => state.pwa.defferedPrompt
   );
 
   const goToHomePage = () => {
@@ -46,9 +59,41 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (imagesLength > 0) {
+    const handleBeforeInstallPrompt = (e: any) => {
+      console.log("before install prompt");
+      e.preventDefault();
+      dispatch(setInstallable(true));
+      dispatch(setDeferredPrompt(e));
+    };
+
+    const handleAppInstalled = () => {
+      dispatch(setPWAInstalled(true));
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, [dispatch]);
+
+  const installPwa = async () => {
+    if (deferredPrompt) {
+      console.log("installing pwa");
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === "accepted") {
+        dispatch(setPWAInstalled(true));
+      }
+      dispatch(setDeferredPrompt(null));
     }
-  }, [imagesLength, router]);
+  };
 
   useEffect(() => {
     (async function () {
@@ -70,6 +115,9 @@ export default function App() {
         <title>My page title</title>
         <meta property="og:title" content="My page title" key="title" />
       </Head>
+      <div style={{ opacity: 0, position: "absolute" }}>
+        <Editor />
+      </div>
       {imagesLength === 0 ? (
         <main className="p-6 flex flex-col h-[100vh]">
           <MyDialogBox
@@ -137,14 +185,18 @@ export default function App() {
           </section>
 
           <footer className="self-end fixed bottom-2">
-            <Heading size={12}>
-              <div className="flex gap-2 items-center">
-                <span className="underline">
-                  Click here to install. No internet needed.
-                </span>
-                <SaveAltIcon sx={{ color: Colors.secondary, fontSize: 16 }} />
-              </div>
-            </Heading>
+            {installable && !pwaInstalled && (
+              <Heading size={12}>
+                <div
+                  onClick={installPwa}
+                  className="flex gap-2 items-center cursor-pointer">
+                  <span className="underline">
+                    Click here to install. No internet needed.
+                  </span>
+                  <SaveAltIcon sx={{ color: Colors.secondary, fontSize: 16 }} />
+                </div>
+              </Heading>
+            )}
           </footer>
         </main>
       ) : (
