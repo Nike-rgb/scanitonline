@@ -177,7 +177,7 @@ export default function Home() {
                 <div className="flex gap-2 items-center">
                   <CheckIcon sx={{ color: Colors.success }} />
                   <Regular>
-                    <span className={styles.regular}>FULLY OFFLINE</span>
+                    <span className={styles.regular}>OFFLINE</span>
                   </Regular>
                 </div>
                 <div className="flex gap-2 items-center">
@@ -216,8 +216,9 @@ export default function Home() {
               <WifiOffIcon sx={{ color: Colors.white, fontSize: 60 }} />
               <span className="md:text-2xl font-semibold">FULLY OFFLINE</span>
               <span style={{ textAlign: "center" }} className={styles.regular}>
-                The app is capable of running fully offline as a full-fetched
-                PWA. Not a single piece of data is sent anywhere.
+                The app is capable of running offline as a full-fetched PWA. Not
+                a single piece of data is sent anywhere. You only need the
+                internet connection when using the editor.
               </span>
             </div>
 
