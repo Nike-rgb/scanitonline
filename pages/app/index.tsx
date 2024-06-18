@@ -112,10 +112,10 @@ export default function App() {
   return (
     <>
       <Head>
-        <title>My page title</title>
+        <title>App | ScanItOnline</title>
         <meta property="og:title" content="My page title" key="title" />
       </Head>
-      <div style={{ opacity: 0, position: "absolute" }}>
+      <div style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}>
         <Editor />
       </div>
       {imagesLength === 0 ? (
