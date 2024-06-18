@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
 
 export default function ImageMenu() {
   const router = useRouter();
@@ -30,10 +29,6 @@ export default function ImageMenu() {
                 <Heading color={Colors.primary}>ScanItOnline</Heading>
               </h1>
             </div>
-
-            <IconButton>
-              <SaveAltIcon sx={{ color: Colors.secondary }} />
-            </IconButton>
           </div>
         </nav>
 

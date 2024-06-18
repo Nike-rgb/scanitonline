@@ -3,7 +3,7 @@ import React from "react";
 
 interface ButtonProps {
   children: React.ReactNode;
-  icon: React.ReactNode;
+  icon: React.ReactNode | null;
   onClick: Function;
   disabled?: boolean;
   variant?: "text" | "contained" | "outlined";

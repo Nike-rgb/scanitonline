@@ -47,15 +47,21 @@ const Cropper = () => {
   }, [img.image]);
 
   const handleCrop = () => {
-    if (scanner) {
+    if (scanner && img.image) {
       const src = scanner.crop();
       dispatch(setEditorImage({ ...img, image: src }));
+    } else {
+      router.push("/app");
     }
   };
 
   const finishCrop = (onMenu: boolean) => {
-    dispatch(addImage(img));
-    router.back();
+    if (scanner && img.image) {
+      dispatch(addImage(img));
+      router.back();
+    } else {
+      router.push("/app");
+    }
   };
 
   return (

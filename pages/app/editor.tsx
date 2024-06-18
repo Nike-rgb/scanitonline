@@ -43,8 +43,6 @@ const Editor = () => {
   const img = useSelector((state: RootState) => state.images.editorImage);
   const router = useRouter();
   useEffect(() => {
-    if (!img.image) router.push("/app");
-
     const updateOnlineStatus = () => {
       setOffline(!navigator.onLine);
     };

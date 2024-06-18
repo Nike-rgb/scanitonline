@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import Head from "next/head";
 import { Regular } from "@/theme/Typography";
 import Colors from "@/theme/Colors";
@@ -14,14 +13,36 @@ import SdStorageIcon from "@mui/icons-material/SdStorage";
 import PeopleIcon from "@mui/icons-material/People";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-const inter = Inter({ subsets: ["latin"] });
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setDeferredPrompt, setPWAInstalled } from "@/redux/pwa_states";
+import MyButton from "@/components/Button";
 
 export default function Home() {
   const [device, setDevice] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch();
+  const installable = useSelector((state: RootState) => state.pwa.installable);
+  const pwaInstalled = useSelector(
+    (state: RootState) => state.pwa.pwaInstalled
+  );
+  const deferredPrompt = useSelector(
+    (state: RootState) => state.pwa.defferedPrompt
+  );
   const navigateToApp = () => {
     router.push("/app");
+  };
+
+  const installPwa = async () => {
+    if (deferredPrompt) {
+      console.log("installing pwa");
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === "accepted") {
+        dispatch(setPWAInstalled(true));
+      }
+      dispatch(setDeferredPrompt(null));
+    }
   };
 
   const returnPlatform = async () => {
@@ -41,7 +62,7 @@ export default function Home() {
         return "Linux";
       }
     }
-    return "browser";
+    return "device";
   };
 
   useEffect(() => {
@@ -105,6 +126,12 @@ export default function Home() {
                 <Button
                   id="github-button"
                   variant="contained"
+                  onClick={() => {
+                    window.open(
+                      "https://github.com/Nike-rgb/scanitonline",
+                      "_blank"
+                    );
+                  }}
                   endIcon={
                     <Image
                       src="/github-mark/github-mark-white.svg"
@@ -232,18 +259,24 @@ export default function Home() {
               width={300}
               height={400}
             />
-            <div className="flex items-start flex-col gap-2 justify-center md:gap-6">
-              <span className="font-semibold md:text-6xl">Ready to start?</span>
+            <div className="flex items-start flex-col gap-6 justify-center md:gap-10">
+              <span className="font-semibold md:text-4xl">Ready to start?</span>
               <Link href="/app" className="underline">
                 <span className={styles.regular}>
                   <span className="md:text-xl">Get started on the browser</span>
                 </span>
               </Link>
-              <Link href="/app" className="underline">
-                <span className={styles.regular}>
-                  <span className="md:text-xl">Install on your {device}</span>
-                </span>
-              </Link>
+              {installable && !pwaInstalled && (
+                <>
+                  <MyButton icon={null} onClick={installPwa}>
+                    <span
+                      className="md:text-md cursor-pointer"
+                      onClick={installPwa}>
+                      Install on your {device}
+                    </span>
+                  </MyButton>
+                </>
+              )}
             </div>
           </div>
         </section>
